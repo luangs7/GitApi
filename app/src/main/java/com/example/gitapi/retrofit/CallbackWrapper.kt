@@ -3,21 +3,20 @@ package com.example.gitapi.retrofit
 import android.util.Log
 import com.example.gitapi.model.BaseRequest
 import com.google.gson.Gson
-import retrofit2.HttpException
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 
 class CallbackWrapper(var throwable:Throwable) {
 
-    var message:String? = ""
+    var message:String? = null
 
-    fun onFailure():String?{
+    fun onFailure():String{
         Log.e("","")
 
         if(throwable is HttpException) {
             val response = throwable as HttpException
+            message = parseMessage()
 
-            if (parseMessage() != null) {
-                message = parseMessage()!!
-            } else {
+            if (message == null) {
                 when (response.code()) {
                     401 -> message = "Não autorizado."
                     404 -> message = "Não encontrado."
@@ -26,22 +25,21 @@ class CallbackWrapper(var throwable:Throwable) {
                     else -> message = ""
                 }
             }
-
         }else{
             message = throwable.message
         }
 
-        return message
+         message?.let { return it } ?: return " "
     }
 
     private fun parseMessage():String?{
         val error = throwable as HttpException
         val errorBody = error.response().errorBody()?.string()
-        var message:String? = null
+        var errorMessage:String? = null
         try{
-            message = Gson().fromJson<BaseRequest>(errorBody, BaseRequest::class.java).message
+            errorMessage = Gson().fromJson<BaseRequest>(errorBody, BaseRequest::class.java).message
         }finally {
-            return message
+            return errorMessage
         }
 
     }

@@ -22,13 +22,13 @@ class MainActivityPresenter
 
 
     override fun getUserInfo(name: String) {
+        view.hideKeyboard()
         view.showProgress()
 
         subscription.add(api.getUser(name)
                 .compose(rxThread.applyAsync())
                 .doOnTerminate {
                     view.hideProgress()
-                    view.hideKeyboard()
                 }
                 .subscribe({
                     view.showSuccess(it)
