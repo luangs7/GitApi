@@ -1,13 +1,17 @@
 package com.example.gitapi.view.activity.main
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import br.com.luan2.lgutilsk.utils.*
 import com.example.gitapi.App
 import com.example.gitapi.R
 import com.example.gitapi.model.GithubUser
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.contentView
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainActivityContract.View {
@@ -41,7 +45,7 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
     }
 
     override fun hideKeyboard() {
-
+        contentView?.hideKeyboard()
     }
 
     lateinit var snackbar: Snackbar
@@ -49,9 +53,16 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
     override fun showProgress(message: String?) {
 
         this.snackbar = createSnackProgress("Buscando dados...")
+        this.snackbar.show()
     }
 
     override fun hideProgress() {
         this.snackbar.dismissSnackProgress(this)
     }
+}
+
+
+fun View.hideKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(windowToken, 0)
 }
