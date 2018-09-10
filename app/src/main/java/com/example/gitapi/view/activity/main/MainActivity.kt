@@ -1,6 +1,7 @@
 package com.example.gitapi.view.activity.main
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,9 +10,11 @@ import br.com.luan2.lgutilsk.utils.*
 import com.example.gitapi.App
 import com.example.gitapi.R
 import com.example.gitapi.model.GithubUser
+import com.example.gitapi.view.activity.details.DetailsActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.contentView
+import org.jetbrains.anko.startActivity
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainActivityContract.View {
@@ -42,6 +45,12 @@ class MainActivity : AppCompatActivity(), MainActivityContract.View {
 
     override fun bindViews() {
         btnLoad.setOnClickListener { presenter.getUserInfo(edtUsername.getTextString()) }
+        tvRepo.setOnClickListener {
+
+            val intent = Intent(this,DetailsActivity::class.java)
+            intent.putExtra("name",tvUsername.text)
+            startActivity(intent)
+        }
     }
 
     override fun hideKeyboard() {
