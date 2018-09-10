@@ -19,7 +19,7 @@ class App : Application() {
 
         netComponent = DaggerNetComponent.builder()
                 .applicationModule(ApplicationModule(this))
-                .netModule(NetModule("https://api.github.com/"))
+                .netModule(NetModule("https://api.github.comm/"))
                 .build()
     }
 

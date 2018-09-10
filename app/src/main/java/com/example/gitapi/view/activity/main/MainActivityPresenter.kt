@@ -1,6 +1,7 @@
 package com.example.gitapi.view.activity.main
 
 import com.example.gitapi.model.GithubUser
+import com.example.gitapi.retrofit.CallbackWrapper
 import com.example.gitapi.retrofit.GithubAPI
 import com.example.gitapi.rx.RxThread
 import io.reactivex.disposables.CompositeDisposable
@@ -32,7 +33,7 @@ class MainActivityPresenter
                 .subscribe({
                     view.showSuccess(it)
                 }, {
-                    view.showError(it.message!!)
+                    CallbackWrapper(it).onFailure()?.let { view.showError(it) }
                 })
         )
 
