@@ -17,6 +17,4 @@ class ActivityModule(val activity: AppCompatActivity) {
     @Singleton
     @Provides
     fun provideActivity():Activity = activity
-
-
 }

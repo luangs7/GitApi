@@ -10,6 +10,17 @@ interface MainActivityContract {
 
     }
 
+    interface Interactor {
+
+        interface UserRequestInfo{
+            fun UserRequestInfoSucces(githubUser: GithubUser)
+            fun UserRequestInfoError(error: String)
+        }
+
+        fun getUserRequest(name:String, listener:UserRequestInfo)
+
+    }
+
     interface View{
         fun showError(error: String)
         fun showSuccess(githubUser: GithubUser)
