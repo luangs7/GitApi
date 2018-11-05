@@ -2,25 +2,18 @@ package com.example.gitapi
 
 
 import android.app.Application
-import com.example.daggerex.ApplicationModule
-import com.example.daggerex.DaggerNetComponent
-import com.example.daggerex.NetComponent
-import com.example.daggerex.NetModule
-import com.example.gitapi.di.ActivityComponent
-import com.example.gitapi.di.ActivityModule
-import com.example.gitapi.di.DaggerActivityComponent
+import com.example.gitapi.di.appModule
+import com.example.gitapi.di.networkModule
+import org.koin.android.ext.android.startKoin
+
 
 class App : Application() {
 
-    lateinit var netComponent: NetComponent
 
     override fun onCreate() {
         super.onCreate()
 
-        netComponent = DaggerNetComponent.builder()
-                .applicationModule(ApplicationModule(this))
-                .netModule(NetModule("https://api.github.com/"))
-                .build()
+        startKoin(this, listOf(appModule, networkModule))
     }
 
 }

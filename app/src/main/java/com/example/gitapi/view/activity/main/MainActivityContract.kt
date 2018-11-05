@@ -1,6 +1,7 @@
 package com.example.gitapi.view.activity.main
 
 import com.example.gitapi.model.GithubUser
+import com.example.gitapi.model.viewmodel.GithubUserViewModel
 
 interface MainActivityContract {
 
@@ -27,7 +28,7 @@ interface MainActivityContract {
         fun hideKeyboard()
         fun showProgress(message:String? = "Buscando dados")
         fun hideProgress()
-        fun bindViews()
+        fun bindViews(viewModel:GithubUserViewModel)
 
     }
 

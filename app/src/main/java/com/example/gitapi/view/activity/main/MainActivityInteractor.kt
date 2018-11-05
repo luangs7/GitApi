@@ -1,25 +1,39 @@
 package com.example.gitapi.view.activity.main
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import br.com.luan2.lgutilsk.utils.error
+import com.example.gitapi.model.GithubUser
 import com.example.gitapi.retrofit.CallbackWrapper
 import com.example.gitapi.retrofit.GithubAPI
-import com.example.gitapi.rx.RxThread
+import com.example.gitapi.retrofit.Resource
 import io.reactivex.disposables.CompositeDisposable
-import javax.inject.Inject
 
-open class MainActivityInteractor
-   @Inject constructor(var rxThread:RxThread, private val api: GithubAPI ) :MainActivityContract.Interactor{
+class MainActivityInteractor(val api: GithubAPI){
 
-    val subscription = CompositeDisposable()
+    private val _result = MutableLiveData<Resource<GithubUser>>()
+
+    val result
+        get() = _result as LiveData<Resource<GithubUser>>
 
 
-    override fun getUserRequest(name:String,listener: MainActivityContract.Interactor.UserRequestInfo) {
-        subscription.add(api.getUser(name)
-                .compose(rxThread.applyAsync())
-                .subscribe({
-                    listener.UserRequestInfoSucces(it)
-                }, {
-                    CallbackWrapper(it).onFailure()?.let { listener.UserRequestInfoError(it) }
-                })
-        )
+    suspend fun getUserRequest(name:String) {
+        _result.value = Resource.loading(null)
+
+
+        val response = api.getUser(name).await()
+
+        if(response.isSuccessful){
+            _result.postValue(Resource.success(response.body()))
+        }
+        else{
+            _result.postValue(Resource.error(response.errorBody()!!.string(),null))
+        }
     }
+
+
+
+
+
+
 }

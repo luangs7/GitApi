@@ -3,7 +3,7 @@ package com.example.gitapi.retrofit
 import android.util.Log
 import com.example.gitapi.model.BaseRequest
 import com.google.gson.Gson
-import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
+import retrofit2.HttpException
 
 class CallbackWrapper(var throwable:Throwable) {
 

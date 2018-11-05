@@ -1,40 +1,26 @@
 package com.example.gitapi.view.activity.main
 
+import androidx.lifecycle.Observer
 import com.example.gitapi.model.GithubUser
-import com.example.gitapi.retrofit.GithubAPI
-import com.example.gitapi.rx.RxThread
-import io.reactivex.disposables.CompositeDisposable
-import javax.inject.Inject
+import com.example.gitapi.model.viewmodel.GithubUserViewModel
 
-class MainActivityPresenter
-    @Inject constructor(private val api: GithubAPI, private val rxThread: RxThread,private val interactor: MainActivityInteractor) : MainActivityContract.Presenter {
 
-    lateinit var view:MainActivityContract.View
+class MainActivityPresenter(val viewModel: GithubUserViewModel) : MainActivityContract.Presenter {
+    lateinit var view: MainActivityContract.View
 
-     var subscription = CompositeDisposable()
-
-    fun injectView(view: MainActivityContract.View){
+    fun injectView(view: MainActivityContract.View) {
         this.view = view
-        view.bindViews()
+        view.bindViews(viewModel)
     }
 
 
-    override fun getUserInfo(name: String) {
-        view.hideKeyboard()
-        view.showProgress()
-
-        interactor.getUserRequest(name,object : MainActivityContract.Interactor.UserRequestInfo{
-            override fun UserRequestInfoSucces(githubUser: GithubUser) {
-                view.showSuccess(githubUser)
-                view.hideProgress()
-            }
-
-            override fun UserRequestInfoError(error: String) {
-                view.showError(error)
-                view.hideProgress()
-            }
-        })
+    override  fun getUserInfo(name: String) {
+        viewModel.getGithubUsers(name)
+//        viewModel.repositoryResult.observe(this, Observer { it -> it.data?.let { view.showSuccess(it) } })
     }
+
+
+
 
 
     override fun getUserInfoError(error: String) {
